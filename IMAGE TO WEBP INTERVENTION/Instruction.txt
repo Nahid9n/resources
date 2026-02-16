@@ -1,0 +1,45 @@
+🔹 Intervention Image install করুন
+	composer require intervention/image
+
+👉 Laravel 8/9 হলে config publish করতে পারেন (optional):
+	php artisan vendor:publish --provider="Intervention\Image\Laravel\ServiceProvider"
+
+✅ STEP 2: Helper file create করুন
+	app/Helpers/FileUploadHelper.php
+
+composer.json eita te import korte hobe 
+
+	"autoload": {
+        "psr-4": {
+            "App\\": "app/",
+            "Database\\Factories\\": "database/factories/",
+            "Database\\Seeders\\": "database/seeders/"
+        },
+        "files": [
+            "app/Helpers/FileUploadHelper.php"
+        ]
+    },
+
+তারপর:
+
+composer dump-autoload
+
+✅ STEP 4: Controller থেকে use করুন
+use App\Helpers\FileUploadHelper;
+
+if ($request->hasFile('image')) {
+
+    $fileData = FileUploadHelper::uploadSingleFile(
+        $request->file('image'),
+        'uploads/', // folder
+        60         // webp quality (optional)
+    );
+
+    $url = $fileData['file_url'];
+}
+
+
+✅ STEP 5: Validation (strongly recommended)
+$request->validate([
+    'image' => 'nullable|file|mimes:jpg,jpeg,png,webp,pdf,docx|max:5120',
+]);
